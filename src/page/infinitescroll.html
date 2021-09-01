@@ -1,0 +1,88 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>debouncing</title>
+</head>
+<style>
+    .img-box {
+        height: 500px;
+        border: 1px solid black;
+    }
+
+    .img-box img {
+        height: 500px;
+    }
+</style>
+
+<body>
+    <div class="img-box">
+        <img src="../../assets/directory.png">
+    </div>
+    <div class="img-box">
+        <img src="../../assets/file.png">
+    </div>
+</body>
+
+<script type="text/javascript">
+    const imgSrcList = {
+        1: ["../../assets/directory.png", "../../assets/file.png"],
+        2: ["../../assets/nyan-cat.gif", "../../assets/prev.png"],
+        3: ["../../assets/sample_image.jpg", "../../assets/nyan-cat.gif"]
+    }
+    let imgIdx = 1
+    const $app = document.querySelector('body')
+
+    const render = () => {
+        if (imgSrcList[imgIdx]) {
+            
+            imgSrcList[imgIdx].forEach(src => {
+                const $target = document.createElement('div')
+                $target.className = "img-box"
+                $target.innerHTML = `<img src="${src}">`
+                $app.appendChild($target)
+            })
+
+            
+            imgIdx += 1
+            changeLastImgEl()
+        } else {
+            io.disconnect()
+        }
+    }
+
+    // entries는 관찰대상
+    // 처음에는 entries에 io.observe가 호출된 IntersectionObserverEntry 리스트가 들어온다
+    // 나중에는  관찰 영역으로 들어온 경우에 해당 IntersectionObserverEntry 하나씩만 들어온다
+    // observer는 콜백함수가 호출되는 intersectionObserver
+    const callback = (entries, observer) => {
+        entries.forEach(entry => {
+            // 관찰대상이 뷰포트에 들어온 경우 entry.isIntersecting가 true인 경우로도 파악할 수 있음
+            if (entry.isIntersecting) {
+            // if(entry.intersectionRatio == 1) {
+                render()
+                // unobserve는 엘리먼트 관찰 멈춤. 전체 관찰 멈추고 싶을 경우 disconnect()
+                observer.unobserve(entry.target)
+            }
+        })
+    }
+
+    // 기본구조는 콜백함수와 옵션을 받는다. new IntersectionObserver(callback[, options])
+    // option에서 element가 어떤 영역에 들어왔을 때 관찰할지 설정가능하다
+    const option = {
+        // 무한 스크롤이기 때문에 엘리먼트의 최하단을 관찰하기 위해 threshold를 설정한다
+        threshold: 1.0
+    }
+    const io = new IntersectionObserver(callback, option)
+
+    const changeLastImgEl = () => {
+        const currentImgList = document.querySelectorAll('.img-box')
+        const lastImg = currentImgList[currentImgList.length - 1]
+        // observe는 엘리먼트 관찰 시작
+        io.observe(lastImg)
+    }
+
+    changeLastImgEl()
+</script>
+
+</html>

@@ -1,0 +1,84 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>debouncing</title>
+</head>
+<style>
+    .img-box {
+        height: 500px;
+        border: 1px solid black;
+    }
+
+    .img-box img {
+        height: 500px;
+    }
+</style>
+<body>
+    <div class="img-box">
+        <img src="../../assets/directory.png">
+    </div>
+    <div class="img-box">
+        <img src="../../assets/file.png">
+    </div>
+    <div class="img-box lazy">
+        <img data-src="../../assets/directory.png">
+    </div>
+    <div class="img-box lazy">
+        <img data-src="../../assets/file.png">
+    </div>
+    <div class="img-box lazy">
+        <img data-src="../../assets/nyan-cat.gif">
+    </div>
+    <div class="img-box lazy">
+        <img data-src="../../assets/prev.png">
+    </div>
+    <div class="img-box lazy">
+        <img data-src="../../assets/sample_image.jpg">
+    </div>
+    <div class="img-box lazy">
+        <img data-src="../../assets/nyan-cat.gif">
+    </div>
+</body>
+<script type="text/javascript">
+    // loadLazyImg의 (e) => {...} 함수를 callback으로 전달 받음
+    // limit는 기본값은 100이지만 지금 코드에서는 200을 전달 받고 있음
+    function debouncing(callback, limit = 100) {
+        let timeout; //익명
+        // args에는 addEventListener의 파라미터인 event를 전달 받음
+        return function (...args) {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => {
+                // 콜백함수에 (e) => {...} 전달 받은 event를 파라미터로 넘겨서 실행한다
+                callback.apply(this, args);
+            }, limit);
+        };
+    }
+
+    const imgBoxes = document.querySelectorAll(".img-box.lazy");
+
+    const loadLazyImg = debouncing((e) => {
+        console.log("debouncing 시작")
+
+        // clientHeight : 웹 브라우저 창의 높이
+        // scrollTop : 현재 스크롤된 부분의 맨 위의 높이
+        // scrollHeight : 문서의 총 높이 (= 스크롤의 총 높이)
+        // (이미지 lazy) 해당 이미지가 현재 스크롤 화면에 들어옴 : clientHeight + scrollTop >= box.offsetTop
+        // (참고: 무한스크롤) 스크롤의 마지막에 도달 : clientHeight + scrollTop >= scrollHeight
+        // window.innerHeight = clientHeight
+
+        // scrollingElement 는 스크롤이 생긴 영역 전체 영역
+        const { clientHeight, scrollTop, scrollHeight } = e.target.scrollingElement;
+
+        imgBoxes.forEach((box) => {
+            if (box.offsetTop < clientHeight + scrollTop) {
+                const $img = box.querySelector("img");
+                $img.src = $img.dataset.src;
+                const $imgBox = $img.closest('.img-box');
+                $imgBox.classList.remove("lazy");
+            }
+        });
+    }, 200);
+
+    document.addEventListener("scroll", loadLazyImg);
+</script>
+</html>
