@@ -1,0 +1,53 @@
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>fixedNavigation</title>
+    <link rel="stylesheet" href="../styles/fixednavigation.css">
+</head>
+
+<body>
+    <header class="nav">
+        <h1>Brand</h1>
+        <nav>
+            <span>Menu1</span>
+            <span>Menu2</span>
+            <span>Menu3</span>
+        </nav>
+    </header>
+    <section>section1</section>
+    <section>section2</section>
+    <section>section3</section>
+</body>
+
+</html>
+
+<script type="text/javascript">
+    const fixnav = (entries, observer) => {
+        entries.forEach(entry => {
+            if(!entry.isIntersecting) {
+                entry.target.classList.add("fix-nav")
+                document.querySelector('body').classList.add("fix-nav-wrap")
+                observer.unobserve(entry.target)
+            }
+            else {
+                entry.target.classList.remove("fix-nav")
+                document.querySelector('body').classList.remove("fix-nav-wrap")
+            }
+            
+        })
+    }
+
+    if ("IntersectionObserver" in window) {
+        const option = {
+            threshold: 0.9
+        }
+        const io = new IntersectionObserver(fixnav, option)
+        const header = document.querySelectorAll(".nav")
+        header.forEach(section => {
+            io.observe(section)
+        })
+        
+    }
+    
+</script>

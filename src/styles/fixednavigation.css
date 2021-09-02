@@ -1,0 +1,36 @@
+body, html {
+    margin: 0;
+    padding: 0;
+}
+
+.fix-nav-wrap {
+    padding-top: calc(75px + 2rem);
+}
+
+header {
+    height: 75px;
+    padding: 1rem;
+    color: white;
+    background: teal;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+section + section {
+    border-top: 3px solid white;
+}
+
+section {
+    height: 300px;
+    background-color: thistle;
+    box-sizing: border-box;
+}
+
+.fix-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+}

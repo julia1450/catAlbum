@@ -63,12 +63,13 @@
     // option에서 element가 어떤 영역에 들어왔을 때 관찰할지 설정가능하다 
     if ("IntersectionObserver" in window) {
         const io = new IntersectionObserver(callback)
+        const lazyImgList = document.querySelectorAll('.lazy')
+        lazyImgList.forEach(el => {
+            // observe는 엘리먼트 관찰 시작
+            io.observe(el)
+        })
     }
-    const lazyImgList = document.querySelectorAll('.lazy')
-    lazyImgList.forEach(el => {
-        // observe는 엘리먼트 관찰 시작
-        io.observe(el)
-    })
+    
 </script>
 
 </html>
