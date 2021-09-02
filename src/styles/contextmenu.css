@@ -1,0 +1,22 @@
+.custom-context-menu {
+    min-height: 100px;
+    min-width: 200px;
+    position: absolute;
+    box-sizing: border-box;
+    background-color: #fff;
+    box-shadow: 0 0 1px 2px lightgray;
+}
+
+.custom-context-menu ul {
+    list-style: none;
+    padding: 0;
+    background-color: transparent;
+}
+.custom-context-menu li {
+    padding: 3px 5px;
+    cursor: pointer;
+}
+
+.custom-context-menu li:hover {
+    background-color: thistle;
+}
